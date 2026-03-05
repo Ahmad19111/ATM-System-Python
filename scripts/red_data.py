@@ -2,7 +2,8 @@ import sqlite3
 import os
 
 current_dir = os.path.dirname(__file__)
-db_path = os.path.join(current_dir, "bank.db")
+root_dir = os.path.dirname(current_dir)
+db_path = os.path.join(root_dir, "bank.db")
 
 conn = sqlite3.connect(db_path)
 cur = conn.cursor()
