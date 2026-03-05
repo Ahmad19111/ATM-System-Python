@@ -1,2 +1,4 @@
 bank.db
 *statement.txt
+__pycache__/
+.pytest_cache/
