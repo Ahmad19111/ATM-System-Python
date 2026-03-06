@@ -31,6 +31,10 @@ class BankAccount:
             return None
 
     def deposit(self, amount):
+        balance = self.get_balance()
+        if balance is None:
+            return f"Error: Account '{self.name}' does not exist."
+        
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
 
@@ -44,8 +48,9 @@ class BankAccount:
     
     def withdraw(self, amount):
         balance = self.get_balance()
-
-        if balance >= amount:
+        if balance is None:
+            return f"Error: Account '{self.name}' does not exist."
+        elif balance >= amount:
             conn = sqlite3.connect(DB_PATH)
             cur = conn.cursor()
 
@@ -54,7 +59,7 @@ class BankAccount:
             conn.commit()
             conn.close()
             self.log_transaction(amount, "Withdraw")
-            return f"Success! You withdrawed {amount}. Thank you."
+            return f"Success! You withdrew {amount}. Thank you."
         else:
             return f"Your balance {balance} is not enough"
 
