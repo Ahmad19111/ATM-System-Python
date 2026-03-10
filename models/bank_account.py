@@ -63,35 +63,21 @@ class BankAccount:
         else:
             return f"Your balance {balance} is not enough"
 
-    def export_statement(self):
+    def get_statement_data(self):
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
 
         cur.execute("SELECT date, transaction_type, amount FROM transactions WHERE name = ?",(self.name,))
-
         data = cur.fetchall()
-
-        #conn.commit()
         conn.close()
 
         if not data:
-            return "There is No transaction to print"
+                return []
         
-        lines = []
-        lines.append(f"Statement for: {self.name}")
-        lines.append("-" * 50)
-        lines.append(f"{'DATE':<20} | {'TYPE':<15} | {'AMOUNT':<10}")
-        lines.append("-" * 50)
+        transactions_list = []
 
         for row in data:
-            date, trans_type, amount = row
-            lines.append(f"{date:<20} | {trans_type:<15} | {amount:<10.2f}")
-            lines.append("-" * 50)
+            date, transaction_type, amount = row
+            transactions_list.append({"date": date, "type":transaction_type, "amount":amount })
 
-        file_name = f"{self.name}_statement.txt"
-        full_content = "\n".join(lines)
-
-        with open(file_name, "w", encoding="utf-8") as file:
-            file.write(full_content)
-        
-        return f"Your Statement has been printed in {file_name}"
+        return transactions_list 
