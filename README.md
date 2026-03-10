@@ -1,23 +1,33 @@
-# Python Geldautomaten-Simulation (ATM System)
+# Professionelle Bank-API (FastAPI und SQLite)
 
-Eine modulare, objektorientierte Geldautomaten-Simulation, entwickelt mit Python und SQLite.
+Diese professionelle RESTful API wurde mit FastAPI entwickelt und nutzt SQLite zur persistenten Datenspeicherung. Das Projekt implementiert eine saubere Architektur, die die Geschäftslogik von der Webschnittstelle trennt.
 
 ## Funktionen
-- Sicherer Login: Überprüft den Benutzernamen und erstellt eine Sitzung.
-- Transaktionen: Sicheres Ein- und Auszahlen von Geld.
-- Datenbankintegration: Nutzt SQLite zur Speicherung von Konten und zur Protokollierung des Transaktionsverlaufs.
-- Kontoauszug: Exportiert einen formatierten Kontoauszug als `.txt`-Datei für den Benutzer.
-- Saubere Architektur: Logisch aufgeteilt in Module (Models, Database, Scripts).
+- RESTful Endpunkte: Die API bietet Schnittstellen für Kontostandsabfragen, Einzahlungen, Auszahlungen und den Abruf von Kontoauszügen.
+- Datenvalidierung: Eingehende Anfragen werden mithilfe von Pydantic-Modellen auf Richtigkeit geprüft.
+- HTTP-Statuscodes: Die API kommuniziert über standardisierte Statuscodes, wie 404 für nicht gefundene Konten oder 400 bei unzureichendem Guthaben.
+- Datenbank-Logging: Jede Transaktion wird mit Betrag, Typ und Zeitstempel in einer SQLite-Datenbank protokolliert.
+- Fehlerbehandlung: Das System erkennt fehlende Konten und verhindert ungültige Operationen durch logische Prüfungen.
+
+
 
 ## Projektstruktur
-- `main.py`: Der Einstiegspunkt und die Benutzeroberfläche.
-- `models/`: Enthält die Klasse `BankAccount` (Geschäftslogik).
-- `database/`: Verwaltet den dynamischen Pfad zur Datenbank.
-- `scripts/`: Hilfsskripte zum Einrichten und Füllen der Datenbank (`setup_database.py` etc.).
+- api_server.py: Enthält die FastAPI-Anwendung und alle Endpunkt-Definitionen.
+- models/bank_account.py: Beinhaltet die BankAccount-Klasse mit der gesamten Geschäfts- und Datenbanklogik.
+- database/: Enthält die Konfiguration für den Pfad zur SQLite-Datenbank.
+- tests/: Beinhaltet automatisierte Test-Suites für die Überprüfung der API-Funktionalität.
 
-## Ausführungshinweise
-1. Klonen Sie das Repository auf Ihren lokalen Rechner.
-2. Stellen Sie sicher, dass Python installiert ist.
-3. Beim ersten Start muss die Datenbank initialisiert werden:
-   ```bash
-   python scripts/setup_database.py
+## Ausfuehrungshinweise
+
+1. Installation der notwendigen Bibliotheken:
+   pip install fastapi uvicorn httpx pytest
+
+2. Starten des Servers:
+   uvicorn api_server:app --reload
+
+3. Interaktive Dokumentation:
+   Nach dem Start ist die Swagger-Benutzeroberfläche unter http://127.0.0.1:8000/docs erreichbar.
+
+## Tests ausfuehren
+Zur Überprüfung der Systemintegrität können die automatisierten Tests wie folgt gestartet werden:
+python -m pytest

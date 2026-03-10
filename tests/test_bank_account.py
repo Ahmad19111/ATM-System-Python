@@ -23,7 +23,7 @@ def test_deposit(setup_dummy_db):
     account = BankAccount("Max")
     result = account.deposit(100)
 
-    assert result == f"Success! You deposited 100. Thank you."
+    assert result is True
 
     assert account.get_balance() == 600
 
@@ -31,24 +31,24 @@ def test_deposit_invalid_account(setup_dummy_db):
     account = BankAccount("GohstUser")
     result = account.deposit(100)
 
-    assert result == "Error: Account 'GohstUser' does not exist."
+    assert result is None
 
 def test_withdraw_success(setup_dummy_db):
     account = BankAccount("Max")
     result = account.withdraw(200)
 
-    assert result == "Success! You withdrew 200. Thank you."
+    assert result is True
     assert account.get_balance() == 300.0
 
 def test_withdraw_insufficient_funds(setup_dummy_db):
     account = BankAccount("Max")
     result = account.withdraw(600)
 
-    assert result == "Your balance 500.0 is not enough"
+    assert result is False
     assert account.get_balance() == 500.0
 
 def test_withdraw_invalid_account(setup_dummy_db):
     account = BankAccount("GhostUser")
     result = account.withdraw(100)
 
-    assert result == "Error: Account 'GhostUser' does not exist."
+    assert result is None

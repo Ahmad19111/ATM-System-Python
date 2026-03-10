@@ -4,7 +4,7 @@ from database.db_manager import DB_PATH
 
 class BankAccount:
     def __init__(self, name):
-        self.name = name
+        self.name = name.lower()
 
     def log_transaction(self, amount, trans_type):
         conn = sqlite3.connect(DB_PATH)
