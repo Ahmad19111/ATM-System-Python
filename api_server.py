@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from models.bank_account import BankAccount
 
@@ -28,17 +28,26 @@ def get_balance(username: str):
 def deposit_mony(request:TransactionRequest):
     account = BankAccount(request.username)
     result = account.deposit(request.amount)
-    current_balance = account.get_balance()
+    
 
-    return {"username": request.username, "message": result, "balance":current_balance}
+    if result is None:
+        raise HTTPException(status_code = 404, detail = f"Account '{request.username}'not found.")
+
+    current_balance = account.get_balance()
+    return {"username": request.username, "message": f"Successfully deposited {request.amount}", "balance":current_balance}
 
 @app.post("/withdraw")
 def withdraw_mony(request:TransactionRequest):
     account = BankAccount(request.username)
     result =account.withdraw(request.amount)
+    
+    if result is None:
+        raise HTTPException(status_code = 404, detail = f"Account '{request.username}'not found.")
+    elif result == False:
+        raise HTTPException(status_code = 400, detail = "Insufficient funds")
+    
     current_balance = account.get_balance()
-
-    return {"username":request.username, "messge": result, "balance":current_balance}
+    return {"username":request.username, "messge": f"Successfully withdrew {request.amount}", "balance":current_balance}
 
 @app.get("/statement/{username}")
 def get_statement(username: str):
